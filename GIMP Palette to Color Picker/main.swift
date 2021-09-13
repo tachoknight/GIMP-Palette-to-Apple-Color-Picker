@@ -24,26 +24,6 @@ struct Color: Hashable {
         hasher.combine(String(self.blue))
     }
 
-    // This function is super-specific to the rgb.txt file
-    // so don't use it if the colors are in a different
-    // format
-    mutating func splitIntoColorParts(rgb: String) {
-        let rS = rgb.index(rgb.startIndex, offsetBy: 0)
-        let rE = rgb.index(rgb.startIndex, offsetBy: 3)
-        let rRange = rS..<rE
-        self.red = Int(rgb[rRange]) ?? -1
-
-        let gS = rgb.index(rgb.startIndex, offsetBy: 4)
-        let gE = rgb.index(rgb.startIndex, offsetBy: 7)
-        let gRange = gS..<gE
-        self.green = Int(rgb[gRange]) ?? -1
-
-        let bS = rgb.index(rgb.startIndex, offsetBy: 8)
-        let bE = rgb.index(rgb.startIndex, offsetBy: 11)
-        let bRange = bS..<bE
-        self.blue = Int(rgb[bRange]) ?? -1
-    }
-
     func getNSColor() -> NSColor {
         func roundTo3(_ val: Int16) -> Float {
             let x = Float(val) / 255.0
