@@ -95,7 +95,7 @@ extension String {
         let i = index(startIndex, offsetBy: lowerBound)
         let j = index(i, offsetBy: upperBound-lowerBound)
 
-        return String(self[i..<j])
+        return String(self[i ..< j])
     }
 }
 
@@ -180,14 +180,38 @@ func parseFileContents(_ fileContents: String) -> [String: [Color]] {
             var color = Color()
             let lineParts = line.components(separatedBy: "\t")
 
-            // There may be spaces when the number is not three digits, so
-            // we take care of that before converting to Integers
-            color.red = Int(lineParts[0].trimmingCharacters(in: .whitespacesAndNewlines))!
-            color.green = Int(lineParts[1].trimmingCharacters(in: .whitespacesAndNewlines))!
-            color.blue = Int(lineParts[2].trimmingCharacters(in: .whitespacesAndNewlines))!
-            // And the name
-            color.name = lineParts[3].trimmingCharacters(in: .whitespacesAndNewlines)
+            // If there are only two parts, then the file uses spaces between the RGB
+            // values and a tab between that section and the name, so we'll parse
+            // that a little differently
+            if lineParts.count == 2 {
+                let tempColorsParts = lineParts[0].components(separatedBy: " ")
+                // Okay, now let's filter out where there is more than one space, which
+                // would be an element in the new array
+                let colorParts = { () -> [Int] in
+                    var fixedColors = [Int]()
+                    for test in tempColorsParts {
+                        if test.trimmingCharacters(in: .whitespacesAndNewlines).length() > 0 {
+                            fixedColors.append(Int(test.trimmingCharacters(in: .whitespacesAndNewlines))!)
+                        }
+                    }
 
+                    return fixedColors
+                }
+                color.red = colorParts()[0]
+                color.green = colorParts()[1]
+                color.blue = colorParts()[2]
+
+                // And now the name
+                color.name = lineParts[1].trimmingCharacters(in: .whitespacesAndNewlines)
+            } else {
+                // There may be spaces when the number is not three digits, so
+                // we take care of that before converting to Integers
+                color.red = Int(lineParts[0].trimmingCharacters(in: .whitespacesAndNewlines))!
+                color.green = Int(lineParts[1].trimmingCharacters(in: .whitespacesAndNewlines))!
+                color.blue = Int(lineParts[2].trimmingCharacters(in: .whitespacesAndNewlines))!
+                // And the name
+                color.name = lineParts[3].trimmingCharacters(in: .whitespacesAndNewlines)
+            }
             colors.append(color)
         }
     }
@@ -208,7 +232,7 @@ func parseFileContents(_ fileContents: String) -> [String: [Color]] {
  *      P R O G R A M  S T A R T
  *******************************************************************************************/
 
-let allGIMPPaletteFiles = listAllFileNamesExtension(for: .downloadsDirectory, nameDirectory: "Embroidery Color Palettes", extensionWanted: "gpl")
+let allGIMPPaletteFiles = listAllFileNamesExtension(for: .downloadsDirectory, nameDirectory: "gimp-palettes-master/palettes", extensionWanted: "gpl")
 
 // Okay, for each file in the directory, let's go through them and create a color
 // picker file
@@ -218,7 +242,9 @@ allGIMPPaletteFiles.paths.forEach { file in
     // There's only one key/value pair in the dictionary, but regardless we
     // use the standard for() loop to get at them easily
     for (key, value) in colors {
+        
         let newFilename = key.replacingOccurrences(of: "/", with: "_")
+        print("\(key) becomes \(newFilename)")
         let colorList = NSColorList(name: newFilename)
         for color in value {
             colorList.setColor(color.getNSColor(), forKey: color.name)
@@ -227,7 +253,9 @@ allGIMPPaletteFiles.paths.forEach { file in
         // And write the file, which will go directly to
         // /Users/<user>/Library/Colors/newFilename.clr
         do {
-             try colorList.write(to: URL(string: String(format: "file:///%s.clr", newFilename)))
+            let clrFileName = String(format: "file:///%@.clr", newFilename)
+            print("Writing \(clrFileName)")
+            try colorList.write(to: URL(string: clrFileName))
         } catch {
             print("Hmm, when writing got \(error)")
         }
