@@ -13,10 +13,26 @@ import Foundation
 //
 
 struct Color: Hashable {
-    var name = ""
     var red = 0
     var green = 0
     var blue = 0
+    var _name: String = ""
+    var name: String {
+        set { self._name = newValue.trimmingCharacters(in: .whitespacesAndNewlines) }
+        // Cheap hack; if the name is "Untitled", well, that doesn't do us very much
+        // good so instead we'll just go with the RGB values instead. This is also
+        // necessary because the resulting file will, seemingly, make unique values
+        // based on the name (which makes sense as it's ultimately a dictionary) so
+        // we definitely want to make sure each name is unique
+        get { if self._name.length() > 0 && self._name != "Untitled" {
+            return self._name
+        } else {
+            // We don't have a name, so we'll create one from the
+            // RGB values
+            return String(format: "(%d %d %d)", red, green, blue)
+        }
+        }
+    }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(String(self.red))
@@ -242,9 +258,7 @@ allGIMPPaletteFiles.paths.forEach { file in
     // There's only one key/value pair in the dictionary, but regardless we
     // use the standard for() loop to get at them easily
     for (key, value) in colors {
-        
         let newFilename = key.replacingOccurrences(of: "/", with: "_")
-        print("\(key) becomes \(newFilename)")
         let colorList = NSColorList(name: newFilename)
         for color in value {
             colorList.setColor(color.getNSColor(), forKey: color.name)
