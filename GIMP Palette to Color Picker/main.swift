@@ -210,8 +210,8 @@ func parseFileContents(_ fileContents: String) -> [String: [Color]] {
 
 let allGIMPPaletteFiles = listAllFileNamesExtension(for: .downloadsDirectory, nameDirectory: "Embroidery Color Palettes", extensionWanted: "gpl")
 
-// print(allJsonNamePath.paths[4])
-// print(loadFile(allJsonNamePath.paths[4]))
+// Okay, for each file in the directory, let's go through them and create a color
+// picker file
 allGIMPPaletteFiles.paths.forEach { file in
     let colors = parseFileContents(loadFile(file))
 
