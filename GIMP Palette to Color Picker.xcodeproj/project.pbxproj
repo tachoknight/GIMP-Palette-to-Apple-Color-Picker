@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		0FFF4B5026ECEEDB003DC7F6 /* GIMP Palette to Color Picker */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "GIMP Palette to Color Picker"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FFF4B5326ECEEDB003DC7F6 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		0FFF4B5A26ED0794003DC7F6 /* GIMP Palette to Color Picker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "GIMP Palette to Color Picker.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +58,7 @@
 		0FFF4B5226ECEEDB003DC7F6 /* GIMP Palette to Color Picker */ = {
 			isa = PBXGroup;
 			children = (
+				0FFF4B5A26ED0794003DC7F6 /* GIMP Palette to Color Picker.entitlements */,
 				0FFF4B5326ECEEDB003DC7F6 /* main.swift */,
 			);
 			path = "GIMP Palette to Color Picker";
@@ -244,6 +246,7 @@
 		0FFF4B5826ECEEDB003DC7F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "GIMP Palette to Color Picker/GIMP Palette to Color Picker.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = BXNBRJPZ7T;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -255,6 +258,7 @@
 		0FFF4B5926ECEEDB003DC7F6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "GIMP Palette to Color Picker/GIMP Palette to Color Picker.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = BXNBRJPZ7T;
 				ENABLE_HARDENED_RUNTIME = YES;
